@@ -20,12 +20,16 @@
     <button id="capture">Capturar</button>
     <canvas id="canvas" width="320" height="240"></canvas>
     <div id="result"></div>
+    <div id="noAutorizacion"></div>
+    <div id="noFecha"></div>
     <script>
         document.addEventListener('DOMContentLoaded', function () {
     const video = document.getElementById('video');
     const canvas = document.getElementById('canvas');
     const context = canvas.getContext('2d');
     const resultDiv = document.getElementById('result');
+    const numeroAutorizacion = document.getElementById('noAutorizacion');
+    const fecha = document.getElementById('noFecha');
   
     // ************** QUAGGAJS *******************
 
@@ -53,6 +57,7 @@
       const code = data.codeResult.code;
       console.log("Código detectado: ", code);
       resultDiv.textContent = "Código detectado: " + code;
+    parsearCodigo(code);
     //   Quagga.stop(); // Detener la lectura después de detectar un código
     });
   
@@ -75,6 +80,22 @@
     document.getElementById('capture').addEventListener('click', () => {
       context.drawImage(video, 0, 0, canvas.width, canvas.height);
     });
+
+    function parsearCodigo(code){
+                if(code.length>10){
+                    Quagga.stop(); 
+                    let reversa = code.split('').reverse().join('');
+                    let fechas = reversa.slice(0,4);
+                    let numAutorizacion = reversa.slice(4,10);
+                    numeroAutorizacion.textContent = "Codigo de Autorizacion: " + numAutorizacion.split('').reverse().join('');
+                    fecha.textContent = "Fecha transaccion: " + fechas.split('').reverse().join('');
+                    console.log("CodigoValido: ",code);
+                }else{
+                    numeroAutorizacion.textContent = "Codigo No Valido";
+                    fecha.textContent = "Codigo No Valido";
+                    console.log("CodigoNoValido: ",code);
+                }
+            }
   });
     </script>
 </body>
