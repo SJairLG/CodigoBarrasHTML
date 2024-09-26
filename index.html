@@ -59,7 +59,11 @@
     // ************** ******** *******************
 
     // Pedir acceso a la cámara
-    navigator.mediaDevices.getUserMedia({ video: true })
+    navigator.mediaDevices.getUserMedia({ 
+        video: {
+            facingMode: { exact: "enviroment"}
+        } 
+    })
       .then((stream) => {
         video.srcObject = stream;
       })
