@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Acceder a la cámara</title>
+    <style>
+        html,body{
+            background-color: grey;
+        }
+    </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/quagga/0.12.1/quagga.min.js"></script>
+
+</head>
+<body>
+    <h1>Acceso a la cámara y lectura de códigos de barras</h1>
+    <div id="interactive" class="viewport">
+        <video id="video" width="320" height="240" autoplay></video>
+    </div>
+    <button id="capture">Capturar</button>
+    <canvas id="canvas" width="320" height="240"></canvas>
+    <div id="result"></div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+    const video = document.getElementById('video');
+    const canvas = document.getElementById('canvas');
+    const context = canvas.getContext('2d');
+    const resultDiv = document.getElementById('result');
+  
+    // ************** QUAGGAJS *******************
+
+    // Iniciar QuaggaJS
+    Quagga.init({
+        inputStream: {
+            name: "Live",
+            type: "LiveStream",
+            target: video, // Video element
+        },
+        decoder: {
+            readers: ["code_128_reader"] // Agrega los lectores de códigos de barras que necesites
+        },
+    }, (err) => {
+        if (err) {
+            console.error("Error al iniciar QuaggaJS: ", err);
+            return;
+        }
+        console.log("QuaggaJS iniciado correctamente");
+        Quagga.start();
+    });
+
+    // Procesar los resultados del código de barras
+    Quagga.onDetected((data) => {
+      const code = data.codeResult.code;
+      console.log("Código detectado: ", code);
+      resultDiv.textContent = "Código detectado: " + code;
+    //   Quagga.stop(); // Detener la lectura después de detectar un código
+    });
+  
+    // ************** ******** *******************
+
+    // Pedir acceso a la cámara
+    navigator.mediaDevices.getUserMedia({ video: true })
+      .then((stream) => {
+        video.srcObject = stream;
+      })
+      .catch((err) => {
+        console.error("Error al acceder a la cámara: ", err);
+      });
+  
+    // Capturar la imagen de la cámara al hacer clic en el botón
+    document.getElementById('capture').addEventListener('click', () => {
+      context.drawImage(video, 0, 0, canvas.width, canvas.height);
+    });
+  });
+    </script>
+</body>
+</html>
