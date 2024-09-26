@@ -14,17 +14,11 @@
 </head>
 <body>
     <h1>Acceso a la cámara y lectura de códigos de barras</h1>
-    <div id="interactive" class="viewport">
-        <video id="video" width="320" height="240" autoplay playsinline></video>
-    </div>
-    <button id="capture">Capturar</button>
-    <canvas id="canvas" width="320" height="240"></canvas>
+    <video id="video" width="320" height="240" autoplay playsinline></video>
     <div id="result"></div>
     <script>
         document.addEventListener('DOMContentLoaded', function () {
     const video = document.getElementById('video');
-    const canvas = document.getElementById('canvas');
-    const context = canvas.getContext('2d');
     const resultDiv = document.getElementById('result');
   
     // ************** QUAGGAJS *******************
@@ -59,27 +53,19 @@
     // ************** ******** *******************
 
     // Pedir acceso a la cámara
-    navigator.mediaDevices.getUserMedia({ 
-        video: {
-            facingMode: { exact: "enviroment"}, // Forzar el uso de la cámara trasera
-              width: { ideal: 1280 }, // Ajustar la resolución ideal (puedes cambiarla según tu necesidad)
-              height: { ideal: 720 }
-        } 
-    })
-      .then((stream) => {
-        video.srcObject = stream;
-          video.play();
-      })
-      .catch((err) => {
-        console.error("Error al acceder a la cámara: ", err);
-          resultDiv.textContent = "Error al acceder a la cámara: " + err.message;
+        navigator.mediaDevices.getUserMedia({ 
+            video: {
+                facingMode: { exact: "enviroment"}, // Forzar el uso de la cámara trasera
+                  width: { ideal: 320 }, // Ajustar la resolución ideal (puedes cambiarla según tu necesidad)
+                  height: { ideal: 240 }
+            } 
+        }).then((stream) => {
+            video.srcObject = stream;
+              video.play();
+          }).catch((err) => {
+              resultDiv.textContent = "Error al acceder a la cámara: " + err.message;
+          });
       });
-  
-    // Capturar la imagen de la cámara al hacer clic en el botón
-    document.getElementById('capture').addEventListener('click', () => {
-      context.drawImage(video, 0, 0, canvas.width, canvas.height);
-    });
-  });
     </script>
 </body>
 </html>
