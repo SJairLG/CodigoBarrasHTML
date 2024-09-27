@@ -17,12 +17,15 @@
     <div id="interactive" class="viewport">
         <video id="video" width="320" height="240" autoplay playsinline></video>
     </div>
+    <button id="capture">Capturar</button>
+    <canvas id="canvas" width="320" height="240"></canvas>
     <div id="result"></div>
     <div id="noAutorizacion"></div>
     <div id="noFecha"></div>
     <script>
         document.addEventListener('DOMContentLoaded', function () {
     const video = document.getElementById('video');
+    const canvas = document.getElementById('canvas');
     const context = canvas.getContext('2d');
     const resultDiv = document.getElementById('result');
     const numeroAutorizacion = document.getElementById('noAutorizacion');
@@ -72,6 +75,11 @@
       .catch((err) => {
         console.error("Error al acceder a la cámara: ", err);
       });
+
+    // Capturar la imagen de la cámara al hacer clic en el botón
+            document.getElementById('capture').addEventListener('click', () => {
+            context.drawImage(video, 0, 0, canvas.width, canvas.height);
+            });
   
     // Capturar la imagen de la cámara al hacer clic en el botón
 
